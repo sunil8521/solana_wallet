@@ -1,9 +1,9 @@
 import Wallet from "./com/Wallet";
-
+import WalletDetails from "./com/WalletDetails";
 function App() {
   return (
     <>
-    <Wallet/>
+    <WalletDetails/>
       {/* <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-4">
         <h1 className="text-4xl font-bold mb-8">Create ETH wallet</h1>
 
