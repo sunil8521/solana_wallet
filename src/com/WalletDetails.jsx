@@ -1,13 +1,21 @@
-import { useState } from 'react'
-import { EyeIcon, SendIcon, DownloadIcon, Trash2Icon,Copy } from 'lucide-react'
+import { useState } from "react";
+import {
+  EyeIcon,
+  SendIcon,
+  DownloadIcon,
+  RotateCw,
+  Trash2Icon,
+  Copy,
+} from "lucide-react";
 
 export default function WalletDetails() {
-  const [showPrivateKey, setShowPrivateKey] = useState(false)
-  
-  const seedPhrase = "half gift heavy gadget test gun glue nation noise arena pretty force"
-  const publicKey = "8tLs6kzg1xZPrWtlj9Pko5qu9QB5GqBhEZnj9uS1feyg"
-  const privateKey = "8tLs6kzg1xZPrWtlj9Pko5qu9QB5GqBhEZnj9uS1feyg"
-  const balance = "1,234.56 SOL"
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+
+  const seedPhrase =
+    "half gift heavy gadget test gun glue nation noise arena pretty force";
+  const publicKey = "8tLs6kzg1xZPrWtlj9Pko5qu9QB5GqBhEZnj9uS1feyg";
+  const privateKey = "8tLs6kzg1xZPrWtlj9Pko5qu9QB5GqBhEZnj9uS1feyg";
+  const balance = "1,234.56";
   const [network, setNetwork] = useState("devnet");
   const handleCopy = () => {
     navigator.clipboard
@@ -22,6 +30,17 @@ export default function WalletDetails() {
   const handleNetworkChange = (event) => {
     setNetwork(event.target.value);
   };
+  const sendSolana = () => {};
+  const addWallet = async() => {
+
+    // try{
+    //   const 
+    // }catch(er){
+
+    // }
+
+  };
+  const deleteWallet = () => {};
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
@@ -47,38 +66,32 @@ export default function WalletDetails() {
 
         {/* Header with Add/Delete Buttons */}
         <div className="flex items-center justify-between">
-
-
-<div className='flex gap-6'>
-
-          <h1 className="text-4xl font-bold">solana Wallet</h1>
-          <select
-          value={network}
-          onChange={handleNetworkChange}
-          className="font-semibold bg-white border outline-none rounded px-1 py-2 text-black hover:bg-gray-100"
-          >
-          <option value="mainnet-beta">Mainnet</option>
-          <option value="devnet">Devnet</option>
-          <option value="testnet">Testnet</option>
-        </select>
+          <div className="flex gap-6">
+            <h1 className="text-4xl font-bold">solana Wallet</h1>
+            <select
+              value={network}
+              onChange={handleNetworkChange}
+              className="font-semibold bg-white border outline-none rounded px-1 py-2 text-black hover:bg-gray-100"
+            >
+              <option value="mainnet">Mainnet</option>
+              <option value="devnet">Devnet</option>
+            </select>
           </div>
 
-
-
           <div className="flex gap-3">
-            <button 
-              className= " rounded-md font-semibold px-4 py-2 bg-white text-black hover:bg-gray-200"
+            <button
+              onClick={addWallet}
+              className=" rounded-md font-semibold px-4 py-2 bg-white text-black hover:bg-gray-200"
             >
               Add Wallet
             </button>
-            <button 
+            <button
+              onClick={deleteWallet}
               className="bg-white py-2 px-2 rounded-md text-red-500 hover:bg-red-500/10"
             >
               <Trash2Icon className="h-5 w-5" />
             </button>
           </div>
-
-
         </div>
 
         {/* Wallet Details */}
@@ -87,19 +100,27 @@ export default function WalletDetails() {
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div>
               <h2 className="text-gray-400">Balance</h2>
-              <p className="text-2xl font-bold">{balance}</p>
+              <div className="flex items-center">
+                <p className="text-2xl mr-1 font-bold">{balance}</p>
+                <button>
+                  <RotateCw className="h-4 w-4 text-gray-400 "  />
+                </button>
+              </div>
             </div>
             <div className="flex gap-3">
-              <button 
+              <button
+                onClick={sendSolana}
                 className="bg-zinc-800 py-2 px-2 items-center flex flex-col  rounded-md border-green-500 text-green-500 hover:bg-green-500/10"
               >
                 Send
               </button>
-              <button 
+              <a
+                href="https://faucet.solana.com/"
+                target="_blank"
                 className="bg-zinc-800 flex flex-col items-center  py-2 px-2 rounded-md border-blue-500 text-blue-500 hover:bg-blue-500/10"
               >
                 Receive
-              </button>
+              </a>
             </div>
           </div>
 
@@ -112,7 +133,7 @@ export default function WalletDetails() {
             <h2 className="text-gray-400">Private Key</h2>
             <div className="flex items-center justify-between">
               <p className="font-mono">
-                {showPrivateKey ? privateKey : '•'.repeat(privateKey.length)}
+                {showPrivateKey ? privateKey : "•".repeat(privateKey.length)}
               </p>
               <button
                 size="icon"
@@ -126,6 +147,5 @@ export default function WalletDetails() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
