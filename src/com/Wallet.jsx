@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
-const Wallet = () => {
+const Wallet = ({setCurrentPage,setPhrases}) => {
   const [phrase, setPhrase] = useState(new Array(12).fill(""));
 
   const handlePhraseChange = (index, value) => {
@@ -21,7 +21,7 @@ const Wallet = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Recovery phrase submitted:", phrase.join(" "));
+    setPhrases(phrase.join(" "))
   };
 
   return (
@@ -29,7 +29,7 @@ const Wallet = () => {
       <div className="w-full max-w-md space-y-8">
         <button
           className="flex items-center text-white hover:text-gray-300"
-          onClick={() => console.log("Go back")} // Replace with actual navigation
+          onClick={()=>setCurrentPage("main")} // Replace with actual navigation
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
