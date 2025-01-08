@@ -1,63 +1,71 @@
-import { useState } from "react";
-import {
-  EyeIcon,
-  SendIcon,
-  DownloadIcon,
-  RotateCw,
-  Trash2Icon,
-  Copy,
-} from "lucide-react";
+import { Copy, EyeIcon, RotateCw, Trash2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-export default function WalletDetails() {
+export default function WalletDetails({ walletData, setWalletData }) {
   const [showPrivateKey, setShowPrivateKey] = useState(false);
-
-  const seedPhrase =
-    "half gift heavy gadget test gun glue nation noise arena pretty force";
-  const publicKey = "8tLs6kzg1xZPrWtlj9Pko5qu9QB5GqBhEZnj9uS1feyg";
-  const privateKey = "8tLs6kzg1xZPrWtlj9Pko5qu9QB5GqBhEZnj9uS1feyg";
-  const balance = "1,234.56";
+  const [selectedWalletIndex, setSelectedWalletIndex] = useState(0);
   const [network, setNetwork] = useState("devnet");
+
   const handleCopy = () => {
     navigator.clipboard
-      .writeText(seedPhrase)
-      .then(() => {
-        // toast.success("Phrase copied to clipboard!");
-      })
-      .catch((err) => {
-        // toast.error("Failed to copy text: ", err);
-      });
+      .writeText(walletData.phrase)
+      .then(() => toast.success("Phrase copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy text."));
   };
+
   const handleNetworkChange = (event) => {
     setNetwork(event.target.value);
   };
-  const sendSolana = () => {};
-  const addWallet = async() => {
 
-    // try{
-    //   const 
-    // }catch(er){
-
-    // }
-
+  const addWallet = () => {
+    fetch("http://localhost:4000/api/create-new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        coinType: 501,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const updatedWallets = [...walletData.key, data.key];
+        setWalletData({ ...walletData, key: updatedWallets });
+        setSelectedWalletIndex(updatedWallets.length - 1); // Automatically select new wallet
+        toast.success("New wallet added!");
+      })
+      .catch(() => toast.error("Something went wrong"));
   };
-  const deleteWallet = () => {};
+
+  const deleteWallet = () => {
+    const updatedWallets = walletData.key.filter(
+      (_, index) => index !== selectedWalletIndex
+    );
+    setWalletData({ ...walletData, key: updatedWallets });
+    setSelectedWalletIndex(0); // Reset to the first wallet
+    toast.success("Wallet deleted!");
+  };
+
+  const selectedWallet = walletData?.key[selectedWalletIndex];
+  useEffect(()=>{
+    
+  },[selectedWallet])
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Seed Phrase in 2 columns */}
-        <div className=" p-4 rounded-lg flex justify-between items-center">
+        {/* Seed Phrase Section */}
+        <div className="p-4 rounded-lg flex justify-between items-center">
           <p className="font-mono text-sm break-words">
-            {seedPhrase?.split(" ").map((w, i) => {
-              return (
-                <span
-                  className="mr-1 inline-block p-2 text-black bg-neutral-300 dark:text-white dark:bg-neutral-900 rounded-xl"
-                  key={i}
-                >
-                  {w}
-                </span>
-              );
-            })}
+            {walletData?.phrase.split(" ").map((w, i) => (
+              <span
+                className="mr-1 inline-block p-2 text-black bg-neutral-300 dark:text-white dark:bg-neutral-900 rounded-xl"
+                key={i}
+              >
+                {w}
+              </span>
+            ))}
           </p>
           <button onClick={handleCopy}>
             <Copy />
@@ -67,7 +75,7 @@ export default function WalletDetails() {
         {/* Header with Add/Delete Buttons */}
         <div className="flex items-center justify-between">
           <div className="flex gap-6">
-            <h1 className="text-4xl font-bold">solana Wallet</h1>
+            <h1 className="text-4xl font-bold">Solana Wallet</h1>
             <select
               value={network}
               onChange={handleNetworkChange}
@@ -81,7 +89,7 @@ export default function WalletDetails() {
           <div className="flex gap-3">
             <button
               onClick={addWallet}
-              className=" rounded-md font-semibold px-4 py-2 bg-white text-black hover:bg-gray-200"
+              className="rounded-md font-semibold px-4 py-2 bg-white text-black hover:bg-gray-200"
             >
               Add Wallet
             </button>
@@ -94,57 +102,74 @@ export default function WalletDetails() {
           </div>
         </div>
 
-        {/* Wallet Details */}
-        <div className="space-y-6 bg-zinc-900 p-6 rounded-lg">
-          {/* Balance Section */}
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-            <div>
-              <h2 className="text-gray-400">Balance</h2>
-              <div className="flex items-center">
-                <p className="text-2xl mr-1 font-bold">{balance}</p>
-                <button>
-                  <RotateCw className="h-4 w-4 text-gray-400 "  />
+        {/* Wallet Dropdown */}
+        <div>
+          <label className="block text-gray-400 mb-2">Select Wallet</label>
+          <select
+            value={selectedWalletIndex}
+            onChange={(e) => setSelectedWalletIndex(Number(e.target.value))}
+            className=" bg-white text-black rounded-md p-2"
+          >
+            {walletData?.key.map((wallet, index) => (
+              <option key={index} value={index}>
+                Wallet {index + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Selected Wallet Details */}
+        {selectedWallet && (
+          <div className="space-y-6 bg-zinc-900 p-6 rounded-lg">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+              <div>
+                <h2 className="text-gray-400">Balance</h2>
+                <div className="flex items-center">
+                  <p className="text-2xl mr-1 font-bold">1,234.56</p>
+                  <button>
+                    <RotateCw className="h-4 w-4 text-gray-400" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  className="bg-zinc-800 py-2 px-2 items-center flex flex-col rounded-md border-green-500 text-green-500 hover:bg-green-500/10"
+                >
+                  Send
+                </button>
+                <a
+                  href="https://faucet.solana.com/"
+                  target="_blank"
+                  className="bg-zinc-800 flex flex-col items-center py-2 px-2 rounded-md border-blue-500 text-blue-500 hover:bg-blue-500/10"
+                >
+                  Receive
+                </a>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-gray-400">Public Key</h2>
+              <p className="font-mono">{selectedWallet.public}</p>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-gray-400">Private Key</h2>
+              <div className="flex items-center justify-between">
+                <p className="font-mono">
+                  {showPrivateKey
+                    ? selectedWallet.private
+                    : "•".repeat(selectedWallet.private.length)}
+                </p>
+                <button
+                  onClick={() => setShowPrivateKey(!showPrivateKey)}
+                  className="text-gray-400"
+                >
+                  <EyeIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={sendSolana}
-                className="bg-zinc-800 py-2 px-2 items-center flex flex-col  rounded-md border-green-500 text-green-500 hover:bg-green-500/10"
-              >
-                Send
-              </button>
-              <a
-                href="https://faucet.solana.com/"
-                target="_blank"
-                className="bg-zinc-800 flex flex-col items-center  py-2 px-2 rounded-md border-blue-500 text-blue-500 hover:bg-blue-500/10"
-              >
-                Receive
-              </a>
-            </div>
           </div>
-
-          <div className="space-y-2">
-            <h2 className="text-gray-400">Public Key</h2>
-            <p className="font-mono">{publicKey}</p>
-          </div>
-
-          <div className="space-y-2">
-            <h2 className="text-gray-400">Private Key</h2>
-            <div className="flex items-center justify-between">
-              <p className="font-mono">
-                {showPrivateKey ? privateKey : "•".repeat(privateKey.length)}
-              </p>
-              <button
-                size="icon"
-                onClick={() => setShowPrivateKey(!showPrivateKey)}
-                className="text-gray-400"
-              >
-                <EyeIcon className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
