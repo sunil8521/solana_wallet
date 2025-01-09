@@ -1,11 +1,13 @@
-import { Copy, EyeIcon, RotateCw, Trash2Icon } from "lucide-react";
+import { Copy, EyeIcon, RotateCw, Trash2Icon,Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function WalletDetails({ walletData, setWalletData }) {
+  localStorage.setItem("Info",JSON.stringify(walletData))
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [selectedWalletIndex, setSelectedWalletIndex] = useState(0);
   const [network, setNetwork] = useState("devnet");
+  const [loading, setLoading] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard
@@ -19,7 +21,7 @@ export default function WalletDetails({ walletData, setWalletData }) {
   };
 
   const addWallet = () => {
-    fetch("http://localhost:4000/api/create-new", {
+    fetch(`${import.meta.env.VITE_API}/api/create-new`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,9 +50,28 @@ export default function WalletDetails({ walletData, setWalletData }) {
   };
 
   const selectedWallet = walletData?.key[selectedWalletIndex];
-  useEffect(()=>{
-    
-  },[selectedWallet])
+  const [balance,setBalance]=useState(null);
+  useEffect(() => {
+    setLoading(true)
+    fetch(`${import.meta.env.VITE_API}/api/fetch-balance`, {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        stage: network,
+        adsress: selectedWallet.public,
+      }),
+    })
+      .then((d) => d.json())
+      .then((res) => {
+        setBalance(res.amount);
+        
+      })
+      .catch((er) => {
+        toast.error("Unable to load balance")
+      }).then(()=>{setLoading(false)});
+  }, [selectedWallet, network]);
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
@@ -125,16 +146,14 @@ export default function WalletDetails({ walletData, setWalletData }) {
               <div>
                 <h2 className="text-gray-400">Balance</h2>
                 <div className="flex items-center">
-                  <p className="text-2xl mr-1 font-bold">1,234.56</p>
+                  <p className="text-2xl mr-1 font-bold">{loading?<Loader />:`${balance} SOL`}</p>
                   <button>
                     <RotateCw className="h-4 w-4 text-gray-400" />
                   </button>
                 </div>
               </div>
               <div className="flex gap-3">
-                <button
-                  className="bg-zinc-800 py-2 px-2 items-center flex flex-col rounded-md border-green-500 text-green-500 hover:bg-green-500/10"
-                >
+                <button className="bg-zinc-800 py-2 px-2 items-center flex flex-col rounded-md border-green-500 text-green-500 hover:bg-green-500/10">
                   Send
                 </button>
                 <a

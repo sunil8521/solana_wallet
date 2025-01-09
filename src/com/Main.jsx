@@ -10,7 +10,7 @@ const Main = ({ setCurrentPage, Create, loading }) => {
   };
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-4">
-      <h1 className="text-4xl font-bold mb-8">Create ETH wallet</h1>
+      <h1 className="text-4xl font-bold mb-8">Create SOLANA wallet</h1>
 
       <div className="flex flex-col gap-4 w-full max-w-xs">
         <button
