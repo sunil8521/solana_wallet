@@ -45,7 +45,7 @@ const Wallet = ({setCurrentPage,setPhrases}) => {
             <div  key={index} className="flex items-center">
                 <p className="font-mono">{index+1}.</p>
               <input
-               
+               required
                 type="text"
                 // maxLength={15}
                 value={word}

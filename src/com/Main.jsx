@@ -15,15 +15,16 @@ const Main = ({ setCurrentPage, Create, loading }) => {
       <div className="flex flex-col gap-4 w-full max-w-xs">
         <button
         disabled={loading}
-          onClick={CreateWallet}
-          className="h-12 rounded-md text-lg font-semibold bg-white text-black hover:bg-gray-200 disabled:cursor-not-allowed"
+        onClick={CreateWallet}
+        className="h-12 rounded-md text-lg font-semibold bg-white text-black hover:bg-gray-200 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
         >
           Create
         </button>
 
         <button
+          disabled={loading}
           onClick={() => setCurrentPage("wallet")}
-          className="h-12 rounded-md text-lg font-semibold border-white text-black bg-white hover:bg-gray-200"
+          className="h-12 rounded-md text-lg font-semibold border-white text-black bg-white hover:bg-gray-200 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
         >
           Recovery
         </button>

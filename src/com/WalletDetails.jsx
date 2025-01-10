@@ -2,7 +2,7 @@ import { Copy, EyeIcon, RotateCw, Trash2Icon,Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function WalletDetails({ walletData, setWalletData }) {
+export default function WalletDetails({ walletData, setWalletData,setCurrentPage }) {
   localStorage.setItem("Info",JSON.stringify(walletData))
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [selectedWalletIndex, setSelectedWalletIndex] = useState(0);
@@ -41,11 +41,9 @@ export default function WalletDetails({ walletData, setWalletData }) {
   };
 
   const deleteWallet = () => {
-    const updatedWallets = walletData.key.filter(
-      (_, index) => index !== selectedWalletIndex
-    );
-    setWalletData({ ...walletData, key: updatedWallets });
-    setSelectedWalletIndex(0); // Reset to the first wallet
+  
+    localStorage.removeItem("Info")
+    setCurrentPage("main")
     toast.success("Wallet deleted!");
   };
 

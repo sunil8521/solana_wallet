@@ -11,7 +11,7 @@ function App() {
     const storedData = localStorage.getItem("Info");
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-      setWalletData(parsedData); 
+      setWalletData(parsedData);
       setCurrentPage("details");
     }
   }, []);
@@ -51,7 +51,6 @@ function App() {
     }
   };
 
-  const isLocalStorage = false;
 
   return (
     <>
@@ -66,7 +65,7 @@ function App() {
         <Wallet setPhrases={setPhrases} setCurrentPage={setCurrentPage} />
       )}
       {currentPage === "details" && (
-        <WalletDetails walletData={walletData} setWalletData={setWalletData} />
+        <WalletDetails walletData={walletData} setWalletData={setWalletData} setCurrentPage={setCurrentPage} />
       )}
     </>
   );
