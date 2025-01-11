@@ -1,27 +1,33 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
-const Wallet = ({setCurrentPage,setPhrases}) => {
+const Wallet = ({ setCurrentPage, Create, setPhrases }) => {
   const [phrase, setPhrase] = useState(new Array(12).fill(""));
-
+  const [disable, setDisbale] = useState(false);
   const handlePhraseChange = (index, value) => {
     if (value.includes(" ")) {
-        const words = value.split(" ").slice(0, 12); 
-        const updatedPhrase = [...phrase];
-        words.forEach((word, i) => {
-          if (index + i < 12) updatedPhrase[index + i] = word;
-        });
-        setPhrase(updatedPhrase);
-      } else {
-        const updatedPhrase = [...phrase];
-        updatedPhrase[index] = value;
-        setPhrase(updatedPhrase);
-      }
+      const words = value.split(" ").slice(0, 12);
+      const updatedPhrase = [...phrase];
+      words.forEach((word, i) => {
+        if (index + i < 12) updatedPhrase[index + i] = word;
+      });
+      setPhrase(updatedPhrase);
+    } else {
+      const updatedPhrase = [...phrase];
+      updatedPhrase[index] = value;
+      setPhrase(updatedPhrase);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    setDisbale(true);
     e.preventDefault();
-    setPhrases(phrase.join(" "))
+    setPhrases(phrase.join(" "));
+    const success = await Create(); // Wait for the Create function
+    if (success) {
+      setCurrentPage("details"); // Navigate only on success
+    }
+    setDisbale(false);
   };
 
   return (
@@ -29,7 +35,7 @@ const Wallet = ({setCurrentPage,setPhrases}) => {
       <div className="w-full max-w-md space-y-8">
         <button
           className="flex items-center text-white hover:text-gray-300"
-          onClick={()=>setCurrentPage("main")} // Replace with actual navigation
+          onClick={() => setCurrentPage("main")} // Replace with actual navigation
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
@@ -42,23 +48,24 @@ const Wallet = ({setCurrentPage,setPhrases}) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-wrap gap-2 justify-between">
             {phrase.map((word, index) => (
-            <div  key={index} className="flex items-center">
-                <p className="font-mono">{index+1}.</p>
-              <input
-               required
-                type="text"
-                // maxLength={15}
-                value={word}
-                onChange={(e) => handlePhraseChange(index, e.target.value)}
-                className="w-20 h-8 px-2 text-white font-semibold from-neutral-400 text-sm bg-zinc-800 text-center border border-black rounded focus:outline-none focus:ring-2 focus:ring-zinc-700"
+              <div key={index} className="flex items-center">
+                <p className="font-mono">{index + 1}.</p>
+                <input
+                  required
+                  type="text"
+                  // maxLength={15}
+                  value={word}
+                  onChange={(e) => handlePhraseChange(index, e.target.value)}
+                  className="w-20 h-8 px-2 text-white font-semibold from-neutral-400 text-sm bg-zinc-800 text-center border border-black rounded focus:outline-none focus:ring-2 focus:ring-zinc-700"
                 />
-                </div>
+              </div>
             ))}
           </div>
 
           <button
+            disabled={disable}
             type="submit"
-            className="w-full h-10 text-base font-semibold bg-white text-black hover:bg-gray-200 rounded"
+            className="w-full h-10 text-base font-semibold bg-white text-black hover:bg-gray-200 rounded disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
           >
             Recover Wallet
           </button>

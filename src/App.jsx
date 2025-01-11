@@ -17,6 +17,7 @@ function App() {
   }, []);
   const [walletData, setWalletData] = useState(null);
   const Create = async () => {
+    const toastId = toast.loading("Generating/recovering wallet...");
     try {
       setLoading(true); // Set loading to true before starting the API call
       const response = await fetch(
@@ -40,17 +41,18 @@ function App() {
       }
 
       setWalletData({ phrase: data.phares, key: [data.key] });
-      toast.success("Wallet successfully generated/recovered!");
+      toast.success("Wallet successfully generated/recovered!",{id:toastId})
+
+
       return true; // Indicate success
     } catch (error) {
-      toast.error(error.message || "Failed to generate/recover wallet.");
+      toast.error(error.message || "Failed to generate/recover wallet.",{id:toastId});
       setWalletData(null);
       return false; // Indicate failure
     } finally {
       setLoading(false); // Set loading to false regardless of success or failure
     }
   };
-
 
   return (
     <>
@@ -62,10 +64,18 @@ function App() {
         />
       )}
       {currentPage === "wallet" && (
-        <Wallet setPhrases={setPhrases} setCurrentPage={setCurrentPage} />
+        <Wallet
+          setPhrases={setPhrases}
+          Create={Create}
+          setCurrentPage={setCurrentPage}
+        />
       )}
       {currentPage === "details" && (
-        <WalletDetails walletData={walletData} setWalletData={setWalletData} setCurrentPage={setCurrentPage} />
+        <WalletDetails
+          walletData={walletData}
+          setWalletData={setWalletData}
+          setCurrentPage={setCurrentPage}
+        />
       )}
     </>
   );
