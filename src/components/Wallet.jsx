@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import ContextAccesser from "../context/ContextAccesser"
+const Wallet = () => {
+  const {  setCurrentPage ,Create,setPhrases} = ContextAccesser();
 
-const Wallet = ({ setCurrentPage, Create, setPhrases }) => {
   const [phrase, setPhrase] = useState(new Array(12).fill(""));
   const [disable, setDisbale] = useState(false);
   const handlePhraseChange = (index, value) => {

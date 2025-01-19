@@ -1,9 +1,12 @@
-import { Copy, EyeIcon, RotateCw, Trash2Icon,Loader } from "lucide-react";
+import { Copy, EyeIcon, RotateCw, Trash2Icon, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import ContextAccesser from "../context/ContextAccesser";
 
-export default function WalletDetails({ walletData, setWalletData,setCurrentPage }) {
-  localStorage.setItem("Info",JSON.stringify(walletData))
+export default function WalletDetails() {
+  const { walletData, setWalletData, setCurrentPage } = ContextAccesser();
+
+  localStorage.setItem("Info", JSON.stringify(walletData));
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [selectedWalletIndex, setSelectedWalletIndex] = useState(0);
   const [network, setNetwork] = useState("devnet");
@@ -41,19 +44,18 @@ export default function WalletDetails({ walletData, setWalletData,setCurrentPage
   };
 
   const deleteWallet = () => {
-  
-    localStorage.removeItem("Info")
-    setCurrentPage("main")
+    localStorage.removeItem("Info");
+    setCurrentPage("main");
     toast.success("Wallet deleted!");
   };
 
   const selectedWallet = walletData?.key[selectedWalletIndex];
-  const [balance,setBalance]=useState(null);
+  const [balance, setBalance] = useState(null);
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     fetch(`${import.meta.env.VITE_API}/api/fetch-balance`, {
       method: "POST",
-      headers:{
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -64,11 +66,13 @@ export default function WalletDetails({ walletData, setWalletData,setCurrentPage
       .then((d) => d.json())
       .then((res) => {
         setBalance(res.amount);
-        
       })
       .catch((er) => {
-        toast.error("Unable to load balance")
-      }).then(()=>{setLoading(false)});
+        toast.error("Unable to load balance");
+      })
+      .then(() => {
+        setLoading(false);
+      });
   }, [selectedWallet, network]);
 
   return (
@@ -144,7 +148,9 @@ export default function WalletDetails({ walletData, setWalletData,setCurrentPage
               <div>
                 <h2 className="text-gray-400">Balance</h2>
                 <div className="flex items-center">
-                  <p className="text-2xl mr-1 font-bold">{loading?<Loader />:`${balance} SOL`}</p>
+                  <p className="text-2xl mr-1 font-bold">
+                    {loading ? <Loader /> : `${balance} SOL`}
+                  </p>
                   <button>
                     <RotateCw className="h-4 w-4 text-gray-400" />
                   </button>

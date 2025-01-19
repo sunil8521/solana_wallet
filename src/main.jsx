@@ -1,12 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import {Toaster} from "sonner"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
+import { Toaster } from "sonner";
+import { ContextProvider } from "./context/Context";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Toaster richColors/>
-    <App />
-  </StrictMode>,
-)
+    <ContextProvider>
+      <Toaster richColors />
+      <App />
+    </ContextProvider>
+  </StrictMode>
+);
