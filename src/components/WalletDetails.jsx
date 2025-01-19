@@ -2,6 +2,18 @@ import { Copy, EyeIcon, RotateCw, Trash2Icon, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ContextAccesser from "../context/ContextAccesser";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, RefreshCw, Send } from "lucide-react";
+import { Layout } from "./Shared/Layout";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function WalletDetails() {
   const { walletData, setWalletData, setCurrentPage } = ContextAccesser();
@@ -19,8 +31,8 @@ export default function WalletDetails() {
       .catch(() => toast.error("Failed to copy text."));
   };
 
-  const handleNetworkChange = (event) => {
-    setNetwork(event.target.value);
+  const handleNetworkChange = (value) => {
+    setNetwork(value);
   };
 
   const addWallet = () => {
@@ -76,69 +88,75 @@ export default function WalletDetails() {
   }, [selectedWallet, network]);
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <Layout>
+      <div className="mx-auto max-w-2xl space-y-8">
         {/* Seed Phrase Section */}
-        <div className="p-4 rounded-lg flex justify-between items-center">
-          <p className="font-mono text-sm break-words">
-            {walletData?.phrase.split(" ").map((w, i) => (
-              <span
-                className="mr-1 inline-block p-2 text-black bg-neutral-300 dark:text-white dark:bg-neutral-900 rounded-xl"
-                key={i}
-              >
-                {w}
-              </span>
-            ))}
-          </p>
-          <button onClick={handleCopy}>
-            <Copy />
-          </button>
-        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recovery Phrase</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">Mnemonic</label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPrivateKey(!showPrivateKey)}
+                >
+                  {showPrivateKey ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              <Input
+                type={showPrivateKey ? "text" : "password"}
+                readOnly
+                value={walletData?.phrase}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Header with Add/Delete Buttons */}
-        <div className="flex items-center justify-between">
-          <div className="flex gap-6">
-            <h1 className="text-4xl font-bold">Solana Wallet</h1>
-            <select
-              value={network}
-              onChange={handleNetworkChange}
-              className="font-semibold bg-white border outline-none rounded px-1 py-2 text-black hover:bg-gray-100"
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex gap-2 items-center">
+            <Select
+              defaultValue={network}
+              onValueChange={(value) => handleNetworkChange(value)}
             >
-              <option value="mainnet">Mainnet</option>
-              <option value="devnet">Devnet</option>
-            </select>
-          </div>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Select network" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mainnet">Mainnet</SelectItem>
+                <SelectItem value="devnet">Devnet</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <div className="flex gap-3">
-            <button
-              onClick={addWallet}
-              className="rounded-md font-semibold px-4 py-2 bg-white text-black hover:bg-gray-200"
+            {/*select wallet*/}
+            <Select
+              value={selectedWalletIndex}
+              onValueChange={(value) => setSelectedWalletIndex(Number(value))}
             >
-              Add Wallet
-            </button>
-            <button
-              onClick={deleteWallet}
-              className="bg-white py-2 px-2 rounded-md text-red-500 hover:bg-red-500/10"
-            >
-              <Trash2Icon className="h-5 w-5" />
-            </button>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Select wallet" />
+              </SelectTrigger>
+              <SelectContent>
+                {walletData?.key.map((wallet, index) => (
+                  <SelectItem key={index} value={index}>
+                    Wallet {index + 1}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
-
-        {/* Wallet Dropdown */}
-        <div>
-          <label className="block text-gray-400 mb-2">Select Wallet</label>
-          <select
-            value={selectedWalletIndex}
-            onChange={(e) => setSelectedWalletIndex(Number(e.target.value))}
-            className=" bg-white text-black rounded-md p-2"
-          >
-            {walletData?.key.map((wallet, index) => (
-              <option key={index} value={index}>
-                Wallet {index + 1}
-              </option>
-            ))}
-          </select>
+          <Button onClick={addWallet} variant="outline">
+            Add Wallet
+          </Button>
         </div>
 
         {/* Selected Wallet Details */}
@@ -194,6 +212,6 @@ export default function WalletDetails() {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 }

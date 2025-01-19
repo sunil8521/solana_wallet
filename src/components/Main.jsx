@@ -1,36 +1,35 @@
 import React from "react";
-import ContextAccesser from "../context/ContextAccesser"
-
+import ContextAccesser from "../context/ContextAccesser";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {Layout} from "./Shared/Layout"
 const Main = () => {
-  const {  setCurrentPage ,Create,loading} = ContextAccesser();
+  const { setCurrentPage, Create, loading } = ContextAccesser();
 
-  const CreateWallet =async () => {
-      const success = await Create(); // Wait for the Create function
-      if (success) {
-        setCurrentPage("details"); // Navigate only on success
-      }
-    
+  const CreateWallet = async () => {
+    const success = await Create(); // Wait for the Create function
+    if (success) {
+      setCurrentPage("details"); // Navigate only on success
+    }
   };
   return (
-    <div className="flex min-h-screen flex-col">
-    {/* Layout component replacement */}
-    <header className="hidden"></header>
-    <main className="flex flex-1 items-center justify-center">
-      <div className="w-full max-w-sm border rounded-md shadow-md">
-        <div className="p-4 border-b">
-          <h1 className="text-center text-lg font-bold">Create Solana Wallet</h1>
-        </div>
-        <div className="p-4 space-y-4">
-          <button className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
+    <Layout >
+    <div className="flex h-full items-center justify-center">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-center">Create Solana Wallet</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Button className="w-full" disabled={loading} onClick={CreateWallet}>
             Create New Wallet
-          </button>
-          <button className="w-full px-4 py-2 border rounded-md hover:bg-gray-100">
+          </Button>
+          <Button variant="outline" className="w-full" disabled={loading} onClick={()=>{setCurrentPage("wallet")}}>
             Recover Existing Wallet
-          </button>
-        </div>
-      </div>
-    </main>
-  </div>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+     </Layout>
   );
 };
 
