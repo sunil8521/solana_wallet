@@ -63,6 +63,7 @@ export default function WalletDetails() {
 
   const selectedWallet = walletData?.key[selectedWalletIndex];
   const [balance, setBalance] = useState(null);
+
   useEffect(() => {
     setLoading(true);
     fetch(`${import.meta.env.VITE_API}/api/fetch-balance`, {
@@ -154,62 +155,79 @@ export default function WalletDetails() {
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={addWallet} variant="outline">
-            Add Wallet
-          </Button>
+          <div className="flex gap-2 items-center">
+            <Button variant="outline" onClick={deleteWallet}>
+              <Trash2Icon className="text-red-600" />
+            </Button>
+            <Button onClick={addWallet} variant="outline">
+              Add Wallet
+            </Button>
+          </div>
         </div>
-
         {/* Selected Wallet Details */}
         {selectedWallet && (
-          <div className="space-y-6 bg-zinc-900 p-6 rounded-lg">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-              <div>
-                <h2 className="text-gray-400">Balance</h2>
-                <div className="flex items-center">
-                  <p className="text-2xl mr-1 font-bold">
-                    {loading ? <Loader /> : `${balance} SOL`}
-                  </p>
-                  <button>
-                    <RotateCw className="h-4 w-4 text-gray-400" />
-                  </button>
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Balance</span>
+                  <Button variant="ghost" size="icon">
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-2xl font-bold">
+                {loading ? (
+    <Loader className="animate-spin w-6 h-8 text-gray-500" />
+  ) : (
+    `${balance} SOL`
+  )}
                 </div>
-              </div>
-              <div className="flex gap-3">
-                <button className="bg-zinc-800 py-2 px-2 items-center flex flex-col rounded-md border-green-500 text-green-500 hover:bg-green-500/10">
-                  Send
-                </button>
-                <a
-                  href="https://faucet.solana.com/"
-                  target="_blank"
-                  className="bg-zinc-800 flex flex-col items-center py-2 px-2 rounded-md border-blue-500 text-blue-500 hover:bg-blue-500/10"
-                >
-                  Receive
-                </a>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="text-gray-400">Public Key</h2>
-              <p className="font-mono">{selectedWallet.public}</p>
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="text-gray-400">Private Key</h2>
-              <div className="flex items-center justify-between">
-                <p className="font-mono">
-                  {showPrivateKey
-                    ? selectedWallet.private
-                    : "•".repeat(selectedWallet.private.length)}
-                </p>
-                <button
-                  onClick={() => setShowPrivateKey(!showPrivateKey)}
-                  className="text-gray-400"
-                >
-                  <EyeIcon className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          </div>
+                <div className="flex gap-2">
+                  <Button className="flex-1">
+                    <Send className="mr-2 h-4 w-4" />
+                    Send
+                  </Button>
+                  <Button variant="outline" className="flex-1">
+                    Receive
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Wallet Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Public Key</label>
+                  <Input readOnly value={selectedWallet.public} />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Private Key</label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowPrivateKey(!showPrivateKey)}
+                    >
+                      {showPrivateKey ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <Input
+                    type={showPrivateKey ? "text" : "password"}
+                    readOnly
+                    value={selectedWallet.private}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </>
         )}
       </div>
     </Layout>
