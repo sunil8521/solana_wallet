@@ -14,7 +14,7 @@ export function Layout({ children, showHeader = true }) {
           </div>
         </header>
       )}
-      <main className=" flex-grow">{children}</main>
+      <main className=" container mx-auto p-4 flex-grow">{children}</main>
       <footer className="border-t py-4">
         <div className="container text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} Solana Wallet. All rights reserved.

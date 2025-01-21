@@ -1,4 +1,4 @@
-import { Copy, EyeIcon, RotateCw, Trash2Icon, Loader } from "lucide-react";
+import { Copy, EyeIcon, Trash2Icon, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ContextAccesser from "../context/ContextAccesser";
@@ -104,20 +104,21 @@ export default function WalletDetails() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowPrivateKey(!showPrivateKey)}
+                  onClick={handleCopy}
                 >
-                  {showPrivateKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+             
+                  <Copy/>
                 </Button>
               </div>
-              <Input
-                type={showPrivateKey ? "text" : "password"}
-                readOnly
-                value={walletData?.phrase}
-              />
+              <div className="bg-muted border rounded-md p-3 text-sm font-mono text-muted-foreground">
+    {walletData?.phrase
+      ?.split(" ")
+      .map((word, index) => (
+        <span key={index} className="inline-block mx-1">
+          {word}
+        </span>
+      ))}
+  </div>
             </div>
           </CardContent>
         </Card>

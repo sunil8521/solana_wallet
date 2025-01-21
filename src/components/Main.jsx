@@ -15,6 +15,8 @@ const Main = () => {
   return (
     <Layout >
     <div className="flex h-full items-center justify-center">
+
+
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-center">Create Solana Wallet</CardTitle>
@@ -28,6 +30,8 @@ const Main = () => {
           </Button>
         </CardContent>
       </Card>
+
+      
     </div>
      </Layout>
   );
