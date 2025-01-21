@@ -1,4 +1,4 @@
-// import { ModeToggle } from "./Mode-toggle"
+import { ModeToggle } from "./Mode-toggle"
 
 export function Layout({ children, showHeader = true }) {
   return (
@@ -10,13 +10,13 @@ export function Layout({ children, showHeader = true }) {
               <img src="/solana-logo.svg" alt="Solana Logo" width={32} height={32} />
               <h1 className="text-xl font-bold">Solana Wallet</h1>
             </div>
-            {/* <ModeToggle /> */}
+            <ModeToggle />
           </div>
         </header>
       )}
       <main className=" container mx-auto p-4 flex-grow">{children}</main>
       <footer className="border-t py-4">
-        <div className="container text-center text-sm text-muted-foreground">
+        <div className="container text-center text-sm mx-auto text-muted-foreground">
           © {new Date().getFullYear()} Solana Wallet. All rights reserved.
         </div>
       </footer>

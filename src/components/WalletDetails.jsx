@@ -101,24 +101,17 @@ export default function WalletDetails() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium">Mnemonic</label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCopy}
-                >
-             
-                  <Copy/>
+                <Button variant="ghost" size="sm" onClick={handleCopy}>
+                  <Copy />
                 </Button>
               </div>
               <div className="bg-muted border rounded-md p-3 text-sm font-mono text-muted-foreground">
-    {walletData?.phrase
-      ?.split(" ")
-      .map((word, index) => (
-        <span key={index} className="inline-block mx-1">
-          {word}
-        </span>
-      ))}
-  </div>
+                {walletData?.phrase?.split(" ").map((word, index) => (
+                  <span key={index} className="inline-block mx-1">
+                    {word}
+                  </span>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -179,20 +172,21 @@ export default function WalletDetails() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-2xl font-bold">
-                {loading ? (
-    <Loader className="animate-spin w-6 h-8 text-gray-500" />
-  ) : (
-    `${balance} SOL`
-  )}
+                  {loading ? (
+                    <Loader className="animate-spin w-6 h-8 text-gray-500" />
+                  ) : (
+                    `${balance} SOL`
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1">
                     <Send className="mr-2 h-4 w-4" />
                     Send
                   </Button>
-                  <Button variant="outline" className="flex-1">
+                  <Button onClick={()=>{ window.open('https://faucet.solana.com/',"_blank")}} variant="outline" className="flex-1">
                     Receive
                   </Button>
+                 
                 </div>
               </CardContent>
             </Card>
