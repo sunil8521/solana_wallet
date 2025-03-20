@@ -1,8 +1,19 @@
-# React + Vite
+# Web-Based Wallet
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+A web-based cryptocurrency wallet 
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **UI Components:** [Radix UI](https://www.radix-ui.com/) (`@radix-ui/react-select`, `@radix-ui/react-slot`)
+- **Blockchain Integration:** [ethers.js](https://docs.ethers.org/v6/) for interacting with Ethereum-based networks
+- **Mnemonic Generation:** [bip39](https://www.npmjs.com/package/bip39) for secure phrase handling
+- **Icons:** [Lucide React]
+- **Frontend Framework:** [React]
+- **Styling:**
+  - [Tailwind CSS]
+## Features
+- Generate and restore wallet using mnemonic phrases
+- Send and receive transactions 
+
+
